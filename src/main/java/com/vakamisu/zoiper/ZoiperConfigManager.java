@@ -4,20 +4,15 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class ZoiperConfigManager {
-    private final int range = 700;
-    private final int ret_start = 680;
-    private final int ret_end = 690;
-    private final int new_ret_start = 1111;
-    private final int new_ret_end = 1200;
-    private final int con_start = 1000;
-    private final int con_end = 1110;
+    private final int range = 800;
+    private final int start = 1030;
+    private final int end = 1110;
     private SAXBuilder builder;
     private ExtList extList;
 
@@ -27,7 +22,7 @@ public class ZoiperConfigManager {
     }
 
     public void checkUser(User user) throws JDOMException, IOException {
-        Document doc = (Document) builder.build(user.getZoiperConfig());
+        Document doc = builder.build(user.getZoiperConfig());
         Element rootNode = doc.getRootElement();
         try{
             rootNode.getChild("accounts").getChild("account").getChild("username");
@@ -48,10 +43,7 @@ public class ZoiperConfigManager {
         if (extWas < range){
             context.setText("wisebanc.pbx.commpeak.com");
 
-            Ext extNow = extList.getFreeOne(con_start, con_end);
-            if (extWas <= ret_end && extWas >= ret_start) {
-                extNow = extList.getFreeOne(new_ret_start, new_ret_end);
-            }
+            Ext extNow = extList.getFreeOne(start, end);
             String accountCon = "wisebanc.pbx.commpeak.com";
             account.setText(extNow.getNumber() + "@" + accountCon);
             context.setText(accountCon);
@@ -62,7 +54,7 @@ public class ZoiperConfigManager {
             extNow.setTaken(true);
         }
 
-        XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
+        XMLOutputter xmlOutputter = new XMLOutputter();
         xmlOutputter.output(doc, new FileWriter(user.getZoiperConfig()));
         }
 }

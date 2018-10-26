@@ -13,22 +13,23 @@ public class UserReader {
     private File usersFolder;
     private ZoiperConfigManager configurator;
 
-    public UserReader () throws IOException {
+    public UserReader() throws IOException {
         configurator = new ZoiperConfigManager();
         usersFolder = new File("C:\\Users\\serpe\\IdeaProjects\\ZoiperConfigurator\\users");
         users = new ArrayList<>();
     }
 
     public List<User> checkUsers() throws JDOMException, IOException {
-        for (File file : usersFolder.listFiles()){
+        for (File file : usersFolder.listFiles()) {
             users.add(readUser(file));
         }
         return users;
     }
 
+    //TODO КОСТИЛЬ
     private User readUser(File file) throws JDOMException, IOException {
         User user = new User(file.getName());
-        if (Arrays.asList(file.listFiles()).isEmpty()){
+        if (Arrays.asList(file.listFiles()).isEmpty() || !new File(file.getPath() + "\\AppData\\Roaming\\Zoiper\\Config.xml").exists()) {
             user.setEmpty(true);
             return user;
         }
